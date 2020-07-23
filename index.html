@@ -1,7 +1,238 @@
-<!doctype html>
 <html>
-<head></head>
+<head>
+<script lang="javascript">
+window.addEventListener("load", main)
+var D1, P1, Z, P, S, H, E, Y, A, I, Q, D, Q, C
+function init()
+{
+D1=0
+P1=0
+Z=0     // Year
+P=95    // Population
+S=2800  // Stored bushels
+H=3000  // Harvested bushels
+E=H-S   // What the rats ate
+Y=3     // Bushels per acre
+A=H/Y   // Acres of land
+I=5     // Incoming People
+Q=1
+D=0     // Deaths
+}
+function doReport() 
+{
+    var sReport
+
+    dvAcres.style.display="none"
+    dvBushels.style.display="none"
+    dvPlant.style.display="none"
+    dvError.innerHTML=""
+
+    Z=Z+1
+    sReport = "Hammurabi, I beg to report to you:"+"<br>"
+    sReport+= "In year "+Z+", "+D+" people starved."+"<br>"
+    sReport+= I+" people came to the city."+"<br>"
+    P=P+I
+    if (Q<0) {
+        sReport+="A horrible plague struck. Half the people died."
+        P=Math.floor(P/2)
+    }
+    sReport+="Population is now "+P+"."+"<br>"
+    sReport+="The city now owns "+A+" acres."+"<br>"
+    sReport+="You harvested "+Y+" bushels per acre."+"<br>"
+    sReport+="Rats ate "+E+" bushels."+"<br>"
+    sReport+="You now have "+S+" bushels in store."+"<br>"
+    dvReport.innerHTML=sReport
+
+    C=Math.floor(10*Math.random())
+    Y=C+17
+    dvReport.innerHTML+="Land is now trading at "+Y+" bushels per acre."
+
+    dvAcres.style.display="block"
+//
+// Flor Visual Additions
+//
+    tdTrade.innerHTML=Y
+    tdAcres.innerHTML=A
+    tdPeeps.innerHTML=P
+    tdGrain.innerHTML=S
+    if (Z==11) giveFinalReport()
+}
+function update() {
+}
+function main()
+{
+    init()
+    doReport()
+}
+function buyAcres() {
+    Q=parseInt(inQA.value)
+    if (Q<0) quitSteward()
+    if ((Y*Q)<=S) {
+        A=A+Q
+        S=S-Y*Q
+        C=0
+        dvError.innerHTML=""
+        dvBushels.style.display="block"
+        tdAcres.innerHTML=A
+        tdGrain.innerHTML=S
+    } else {
+        dvError.innerHTML="Hammurabi, think again. You only have only "+S+" bushels of grain. Try again."
+    }
+}
+function sellAcres() {
+    Q=parseInt(inQA.value)
+    if (Q<0) quitSteward()
+    if (Q<A) {
+        A=A-Q
+        S=S+Y*Q
+        C=0
+        dvError.innerHTML=""
+        dvBushels.style.display="block"
+        tdAcres.innerHTML=A
+        tdGrain.innerHTML=S
+    } else {
+        dvError.innerHTML="Hammurabi, think again. You own only "+A+" acres. Try again."
+    }
+}
+function feedPeople() {
+    Q=parseInt(inQB.value)
+    if (Q<0) quitSteward()
+    if (Q<=S) {
+        S=S-Q
+        C=1
+        dvError.innerHTML=""
+        dvPlant.style.display="block"
+        tdGrain.innerHTML=S
+    } else {
+        dvError.innerHTML="Hammurabi, think again. You have only "+S+" bushels of grain. Try again."
+    }
+}
+function plantSeed() {
+    D=parseInt(inD.value)
+    if (D<0) quitSteward()
+    if (D<=A) {
+        if (Math.floor(D/2)<=S) { // Enough grain for seeds?
+            if (D<=(10*P)) {       // Enough people to tend the fields? NB: Flor change to <= 
+                                  // NB: Each person does 10 acres
+                S=S-Math.floor(D/2) // NB: Seeding an acre requires 1/2 bushel
+                tdGrain.innerHTML=S
+                updateKingdom()
+            } else {
+                dvError.innerHTML="Hammurabi, think again. But you only have "+P+" People to tend the fields. Try again."
+            }
+        } else {
+            dvError.innerHTML="Hammurabi, think again. You have only "+S+" bushels of grain. Try again."
+        }
+    } else {
+        dvError.innerHTML="Hammurabi, think again. You own only "+A+" acres. Try again."        
+    }
+}
+function quitSteward() {
+    dvError.innerHTML="Hammurabi, I cannot do what you wish."+"<br>"
+    dvError.innerHTML+="Get yourself another steward!!!!!"+"<br>"
+    endGame()
+}
+
+function giveFinalReport() {
+    dvReport.innerHTML ="In your 10-year term of office, "+P1.toFixed(2)+"% of the"+"<br>"
+    dvReport.innerHTML+="population starved per year on the average, i.e., a total of"+"<br>"
+    dvReport.innerHTML+=D1.toFixed(2)+" people died!!"+"<br>"
+    L=A/P
+    dvReport.innerHTML+="You started with 10 acres per person and ended with"+"<br>"
+    dvReport.innerHTML+=L.toFixed(2)+" acres per person."+"<br><br>"
+    if (P1>33) doImpeach()
+    if (L<7) doImpeach()
+    if (P1>10 || L<9) {
+        dvReport.innerHTML+="Your heavy-handed performance smacks of Nero and Ivan IV"+"<br>"
+        dvReport.innerHTML+="The people (remaining) find you an unpleasand ruler, and,"+"<br>"
+        dvReport.innerHTML+="frankly hate your guts!!"+"<br>"
+    } else if (P1>3 || L<10) {
+        dvReport.innerHTML+="Your performance could have been somewhat better, but"+"<br>"
+        dvReport.innerHTML+="really wasn't too bad at all. "+Math.floor(P*.8*Math.random())+" people"+"<br>"        
+        dvReport.innerHTML+="dearly like to see you assasinated but we all have our"+"<br>"
+        dvReport.innerHTML+="trivial problems."+"<br>"
+    } else {
+        dvReport.innerHTML+="A fantastic performance!!! Charlemagne, Disraeli, and"+"<br>"
+        dvReport.innerHTML+="Jefferson combined could not have done better!"+"<br>"
+    }
+    endGame()
+}
+function doImpeach() {
+    dvError.innerHTML+="Due to this extreme mismanagement you have not only"+"<br>"
+    dvError.innerHTML+="been impeached and thrown out of office but you have"+"<br>"
+    dvError.innerHTML+="also been declared a national fink!!!!!"+"<br>"
+    endGame()
+}
+function endGame() {
+    dvAcres.style.display="none"
+    dvBushels.style.display="none"
+    dvPlant.style.display="none"
+    dvError.innerHTML+="So long for now."+"<br>"
+}
+function updateKingdom() {
+    // A bountiful harvest
+    chance()
+    Y=C
+    H=D*Y
+    E=0
+    chance()
+    if (Math.floor(C/2)==(C/2)) { // TODO: Check
+        E=Math.floor(S/C) // Rats are running wild
+    }
+    S=S-E+H
+    chance()
+    // Let's have some babies
+    I=Math.floor(C*(20*A+S)/P/100+1) // Note: Bizarre baby formula
+    // How many people had full tummies
+    C=Math.floor(Q/20) // Note: Each person should be fed 20 bushels
+    // Horror, a 15% chance of plague
+    Q=Math.floor(10*(2*Math.random()-0.3))
+    if (P>C) { // Starve enough for impeachment?
+        D=P-C // Deaths
+        if (D<=(.45*P)) {
+            P1=((Z-1)*P1+D*100/P)/Z // NOTE:Average people that died per year
+            P=C
+            D1=D1+D // Note: Total deaths
+            doReport()
+        } else {
+            dvError.innerHTML="You starved "+D+" people in one year!!!"+"<br>"
+            doImpeach()
+        }
+    } else {
+        D=0
+        doReport()
+    }
+}
+function chance() {
+    C=Math.floor(Math.random()*5)+1
+}
+</script>
+<style>
+    td {text-align:center}
+</style>    
+</head>
 <body>
-<h1>ProfessorF's GitHub WebSite!</h1>
+<h1>Hammurabi</h1>
+<h2>Try your hand at governing ancient Sumeria</h2>
+
+<div id="dvReport"></div>
+<table>
+    <tr><th>Trade $</th><th>Acres</th><th>People</th><th>Grain</th></tr>
+    <tr><td id="tdTrade"></td><td id="tdAcres">0</td><td id="tdPeeps">0</td><td id="tdGrain">0</td></tr>
+</table>
+<div id="dvAcres">
+How many acres do you wish to buy/sell? <input id="inQA">
+<input type="button" value="Buy" onclick="buyAcres()">
+<input type="button" value="Sell" onclick="sellAcres()"><br>
+</div>
+<div id="dvBushels" style="display:none">
+How many bushels do you wish to feed your people? <input id="inQB">
+<input type="button" value="Feed" onClick="feedPeople()">
+</div>
+<div id="dvPlant" style="display:none">
+How many acres do you wish to plant with seed? <input id="inD">
+<input type="button" value="Plant" onclick="plantSeed()">
+</div>
+<div id="dvError"></div>
 </body>
 </html>
