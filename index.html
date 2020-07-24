@@ -29,23 +29,43 @@ function doReport()
 
     Z=Z+1
     sReport = "Hammurabi, I beg to report to you:"+"<br>"
+    /*
     sReport+= "In year "+Z+", "+D+" people starved."+"<br>"
     sReport+= I+" people came to the city."+"<br>"
+    */
     P=P+I
+    //
+    // Update Flor Report Table
+    //
+    tdrYear.innerHTML=Z
+    tdrStarved.innerHTML=D
+    tdrNewbs.innerHTML=I
     if (Q<0) {
         sReport+="A horrible plague struck. Half the people died."
         P=Math.floor(P/2)
     }
+    /*
     sReport+="Population is now "+P+"."+"<br>"
     sReport+="The city now owns "+A+" acres."+"<br>"
     sReport+="You harvested "+Y+" bushels per acre."+"<br>"
     sReport+="Rats ate "+E+" bushels."+"<br>"
     sReport+="You now have "+S+" bushels in store."+"<br>"
+    */
     dvReport.innerHTML=sReport
+    //
+    // Update Flor Report Table
+    //
+    tdrPeeps.innerHTML=P
+    tdrAcres.innerHTML=A
+    tdrBushels.innerHTML=Y
+    tdrRats.innerHTML=E
+    tdrGrain.innerHTML=S
 
     C=Math.floor(10*Math.random())
     Y=C+17
+    /*
     dvReport.innerHTML+="Land is now trading at "+Y+" bushels per acre."
+    */
 
     dvAcres.style.display="block"
 //
@@ -208,18 +228,47 @@ function chance() {
 }
 </script>
 <style>
-    td {text-align:center}
+    td,th {text-align:center;border-style:solid;border-width:1;padding:2px}
+    table {border-style:solid;border-width:1;border-collapse:collapse;}
+    .label {text-align:left; font-weight:bold}
+    #tbldata {border-style:none;border-collapse:collapse;}
+    #tbldata td {text-align:center;border-style:none;vertical-align:top;}
+    #tbldata td table {border-style:solid;border-width:1;border-collapse:collapse;margin:auto}
+    #tbldata td table td,th {text-align:center;border-style:solid;border-width:1;padding:2px}
+    h1 {margin:auto;text-align:center}
+    h2 {margin:auto}
 </style>    
 </head>
 <body>
 <h1>Hammurabi</h1>
-<h2>Try your hand at governing ancient Sumeria</h2>
-
+<p style="text-align:center">Try your hand at governing ancient Sumeria</p>
+<table id="tblData" style="width:100%">
+<tr>
+<td style="width:50%">
+<h2>Report</h2>
 <div id="dvReport"></div>
+<table>
+    <tr><td class="label">Year</td><td id="tdrYear"></td></tr>
+    <tr><td class="label">People Starved </td><td id="tdrStarved"></td></tr>
+    <tr><td class="label">New People </td><td id="tdrNewbs"></td></tr>
+    <tr><td class="label">Population </td><td id="tdrPeeps"></td></tr>
+    <tr><td class="label">Acres Owned</td><td id="tdrAcres"></td></tr>
+    <tr><td class="label">Bushels harvested per acre</td><td id="tdrBushels"></td></tr>
+    <tr><td class="label">Bushels ate by rats</td><td id="tdrRats"></td></tr>
+    <tr><td class="label">Bushels in store</td><td id="tdrGrain"></td></tr>
+</table>
+</td>
+<td>
+<h2>Status</h2>
+Hammurabi, the current status:
 <table>
     <tr><th>Trade $</th><th>Acres</th><th>People</th><th>Grain</th></tr>
     <tr><td id="tdTrade"></td><td id="tdAcres">0</td><td id="tdPeeps">0</td><td id="tdGrain">0</td></tr>
 </table>
+</td>
+</tr>
+</table>
+<h2>Action</h2>
 <div id="dvAcres">
 How many acres do you wish to buy/sell? <input id="inQA">
 <input type="button" value="Buy" onclick="buyAcres()">
