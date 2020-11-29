@@ -19,7 +19,7 @@ const HALFWALL = WALLXY/2
 var Canvas, Engine, Scene, Light, Camera, Ground, Player, MapCamera
 var MObj // Maze Object
 var StartTime
-var   FollowCam=false // Initially do not follow
+var   FollowCam=true // Initially do not follow
 const FollowDist=70   // stay 10 units behind
 const FollowH=40
 var   Win=false       // Win condition
@@ -203,7 +203,7 @@ function PolygonHero (MazeObj) {
                 Gr.position.x = this.Mesh.position.x
                 Gr.position.y = 1
                 Gr.position.z = this.Mesh.position.z
-            } else console.log("Already visited: "+GName)
+            } // else console.log("Already visited: "+GName)
             this.Mesh.position.x+=(dcol*this.CellW)
             this.Mesh.position.z-=(drow*this.CellH)    
             this.row+=drow
