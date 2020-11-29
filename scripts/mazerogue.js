@@ -19,7 +19,7 @@ const HALFWALL = WALLXY/2
 var Canvas, Engine, Scene, Light, Camera, Ground, Player, MapCamera
 var MObj // Maze Object
 var StartTime
-var   FollowCam=true // Initially do not follow
+var   FollowCam=true  // Initially camera follows player
 const FollowDist=70   // stay 10 units behind
 const FollowH=40
 var   Win=false       // Win condition
@@ -74,6 +74,29 @@ function main() {
 
     // Add the hero to the entrace of the maze
     Player = new PolygonHero(MObj) // Replace later with RobotHero
+
+    // Add a green tile at exit
+    
+    let  GName = "G_"+MObj.ExitRC[0]+"_"+MObj.ExitRC[1]
+    let Gr = BABYLON.MeshBuilder.CreateGround(GName, {
+                width:Player.CellW/4, height:Player.CellH/4
+            }, Scene)
+    Gr.material=new BABYLON.StandardMaterial("M_" + GName, Scene)
+    Gr.material.emissiveColor=new BABYLON.Vector3(1, 0, 0)
+    Gr.material.disableLighting=true
+
+    let r=MObj.ExitRC[0]
+    let c=MObj.ExitRC[1]
+
+    // Calculate the starting x and y positions, transformed for xz coordinates
+    let sx = c*Player.CellW            // Calculate upper-right cornder
+    let sz = r*Player.CellH
+    sx = -(BOARDW/2)+sx+Player.CellW/2 // Adjust for board and center in cell
+    sz =  (BOARDH/2)-sz-Player.CellH/2 
+
+    Gr.position.x = sx
+    Gr.position.y = 1
+    Gr.position.z = sz
 
     StartTime=Date.now()
     Engine.runRenderLoop(updateGame)
